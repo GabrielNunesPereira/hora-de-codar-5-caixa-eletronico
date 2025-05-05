@@ -1,0 +1,156 @@
+<script>
+  let saldo = 1000;
+
+  let extrato = [
+    "Depósito: +R$ 500",
+    "Saque: -R$ 200",
+    "Depósito: +R$ 700",
+    "Saque: -R$ 300",
+  ];
+
+  // A senha fixa do sistema //  valores que não podem ser reatribuídos depois de definidos.
+  const senhaCorreta = "3589";
+
+  let nome = prompt("Olá! Qual é o seu nome?");
+  alert(`Olá ${nome}, é um prazer ter você por aqui!`);
+
+  //inicio
+  function inicio() {
+    let escolha = prompt(
+      `Olá ${nome}, escolha uma opção:\n` +
+        "1 - Saldo\n" +
+        "2 - Extrato\n" +
+        "3 - Saque\n" +
+        "4 - Depósito\n" +
+        "5 - Transferência\n" +
+        "6 - Sair"
+    );
+
+    // Usamos switch para tratar a escolha do usuário
+    switch (escolha) {
+      case "1":
+        verSaldo();
+        break;
+      case "2":
+        verExtrato();
+        break;
+      case "3":
+        fazerSaque();
+        break;
+      case "4":
+        fazerDeposito();
+        break;
+      case "5":
+        fazerTransferencia();
+        break;
+      case "6":
+        alert(`${nome}, foi um prazer ter você por aqui!`);
+        break;
+      default:
+        erro();
+        break;
+    }
+  }
+
+  // Função para validar a senha
+  function validarSenha(callback) {
+    let tentativa = prompt("Digite sua senha:");
+    if (tentativa === senhaCorreta) {
+      callback(); // chama a função desejada
+    } else {
+      alert("Senha incorreta. Tente novamente.");
+      callback(); // chama de novo a mesma função se a senha estiver errada
+    }
+  }
+
+  // Exibir saldo
+  function verSaldo() {
+    validarSenha(() => {
+      alert(`Seu saldo atual é: R$ ${saldo}`);
+      inicio();
+    });
+  }
+
+  // Exibir extrato
+  function verExtrato() {
+    validarSenha(() => {
+      alert("Extrato:\n" + extrato.join("\n"));
+      inicio();
+    });
+  }
+
+  // Fazer saque
+  function fazerSaque() {
+    validarSenha(() => {
+      let valor = parseFloat(prompt("Digite o valor para saque:"));
+      if (isNaN(valor) || valor <= 0) {
+        alert("Operação não autorizada. Valor inválido.");
+      } else if (valor > saldo) {
+        alert("Operação não autorizada. Saldo insuficiente.");
+      } else {
+        saldo -= valor;
+        extrato.push(`Saque: -R$ ${valor}`);
+        alert(`Saque de R$ ${valor} realizado com sucesso.`);
+      }
+      inicio();
+    });
+  }
+
+  // Fazer depósito
+  function fazerDeposito() {
+    let valor = parseFloat(prompt("Digite o valor para depósito:"));
+    if (isNaN(valor) || valor <= 0) {
+      alert("Operação não autorizada. Valor inválido.");
+    } else {
+      saldo += valor;
+      extrato.push(`Depósito: +R$ ${valor}`);
+      alert(`Depósito de R$ ${valor} realizado com sucesso.`);
+    }
+    inicio();
+  }
+
+  // Fazer transferência
+  function fazerTransferencia() {
+    validarSenha(() => {
+      let conta = prompt("Digite o número da conta de destino:");
+
+      // Valida se é um número e não está vazio
+      if (!conta || isNaN(conta)) {
+        alert("Número de conta inválido.");
+        return inicio();
+      }
+
+      let valor = parseFloat(prompt("Digite o valor da transferência:"));
+
+      if (isNaN(valor) || valor <= 0) {
+        alert("Operação não autorizada. Valor inválido.");
+      } else if (valor > saldo) {
+        alert("Operação não autorizada. Saldo insuficiente.");
+      } else {
+        saldo -= valor;
+        extrato.push(`Transferência: -R$ ${valor} para conta ${conta}`);
+        alert(
+          `Transferência de R$ ${valor} para conta ${conta} realizada com sucesso.`
+        );
+      }
+      inicio();
+    });
+  }
+
+  // Mensagem de erro caso a opção do menu seja inválida
+  function erro() {
+    alert(
+      "Opção inválida. Por favor, escolha uma das opções abaixo:\n" +
+        "1 - Saldo\n" +
+        "2 - Extrato\n" +
+        "3 - Saque\n" +
+        "4 - Depósito\n" +
+        "5 - Transferência\n" +
+        "6 - Sair"
+    );
+    inicio();
+  }
+
+  // Chama a função principal para iniciar o programa
+  inicio();
+</script>
